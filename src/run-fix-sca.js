@@ -3,6 +3,7 @@ const path = require('path');
 const os = require('os');
 const core = require('@actions/core');
 const exec = require('@actions/exec');
+const { DefaultArtifactClient } = require('@actions/artifact');
 
 async function runFixSca(workspaceDir, actionPath, fixScaParams) {
   try {
@@ -33,6 +34,19 @@ async function runFixSca(workspaceDir, actionPath, fixScaParams) {
     await exec.exec(veracodeBinary, args, {
       env: { ...process.env }
     });
+
+    // Upload the sca-fix-report.md as an artifact
+    core.info('== Start upload ==')
+    const artifactClient = new DefaultArtifactClient();
+    const artifactName = 'sca-fix-report';
+    const artifactFilePath = path.join(workspaceDir, 'source-code', 'sca-fix-report.md');
+    const uploadResponse = await artifactClient.uploadArtifact(
+      artifactName,
+      [artifactFilePath],
+      workspaceDir,
+      { continueOnError: false }
+    );
+    core.info('== End upload ==')
 
     // Check for changes in the repository
     let hasChanges = false;
