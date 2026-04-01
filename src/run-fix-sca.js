@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
 const core = require('@actions/core');
 const exec = require('@actions/exec');
+const {DefaultArtifactClient} = require('@actions/artifact')
 
 async function runFixSca(workspaceDir, actionPath, fixScaParams) {
   try {
@@ -34,21 +34,20 @@ async function runFixSca(workspaceDir, actionPath, fixScaParams) {
     });
 
     // If exists, upload the sca-fix-report.md as an artifact
-    const artifactFilePath = path.join(workspaceDir, 'source-code', 'sca-fix-report.md');
+    const reportFilename = 'sca-fix-report.md';
+    const artifactFilePath = path.join(workspaceDir, 'source-code', reportFilename);
     if (fs.existsSync(artifactFilePath)) {
       core.info('== Start upload ==')
       const artifactClient = new DefaultArtifactClient();
-      const artifactName = 'sca-fix-report';
       const uploadResponse = await artifactClient.uploadArtifact(
-        artifactName,
+        reportFilename,
         [artifactFilePath],
-        workspaceDir,
         { continueOnError: false }
       );
       core.info('== End upload ==')
       core.info(`Artifact uploaded successfully: ${uploadResponse.artifactName}`);
     } else {
-      core.info('sca-fix-report.md not found. Skipping artifact upload.');
+      core.info(`${reportFilename} not found. Skipping artifact upload.`);
     }
 
     // Check for changes in the repository
