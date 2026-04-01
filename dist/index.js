@@ -83120,7 +83120,6 @@ async function runFixSca(workspaceDir, actionPath, fixScaParams) {
       'sca',
       projectPath,
       '--results', path.join(workspaceDir, 'veracode_artifact_directory/Veracode Agent Based SCA Results', 'scaResults.json'),
-      '--transitive',
       '--async', 
       '--extended-lang',
       '--decouple', 'true'
@@ -83140,12 +83139,15 @@ async function runFixSca(workspaceDir, actionPath, fixScaParams) {
     // If exists, upload the sca-fix-report.md as an artifact
     const reportFilename = 'sca-fix-report.md';
     const artifactFilePath = path.join(workspaceDir, 'source-code', reportFilename);
+    const artifactFilePathDir = path.join(workspaceDir, 'source-code');
+
     if (fs.existsSync(artifactFilePath)) {
       core.info('== Start upload ==')
       const artifactClient = new DefaultArtifactClient();
       const uploadResponse = await artifactClient.uploadArtifact(
         reportFilename,
         [artifactFilePath],
+        artifactFilePathDir,
         { continueOnError: false }
       );
       core.info('== End upload ==')
