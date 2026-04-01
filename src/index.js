@@ -31,7 +31,7 @@ async function main() {
     
     if (!fixScaOutput.hasChanges) {
       core.info('No changes detected. Skipping PR creation.');
-      uploadNoPrComment(workspaceDir, repository, prNumber, githubToken, githubApiUrl);
+      uploadNoPrComment(workspaceDir, repository, prNumber);
       return;
     }
 

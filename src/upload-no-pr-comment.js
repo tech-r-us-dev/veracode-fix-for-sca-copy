@@ -1,11 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const core = require('@actions/core');
-const exec = require('@actions/exec');
-const github = require('@actions/github');
 const { DefaultArtifactClient } = require('@actions/artifact');
 
-async function uploadNoPrComment(workspaceDir, repository, prNumber, githubToken, githubApiUrl) {
+async function uploadNoPrComment(workspaceDir, repository, prNumber) {
   try {  
       const scaFixReportMdFilePath = path.join(workspaceDir, 'source-code', 'sca-fix-report.md');    
       const scaFixReportMd = fs.readFileSync(scaFixReportMdFilePath, 'utf8');
@@ -58,18 +56,19 @@ async function uploadNoPrComment(workspaceDir, repository, prNumber, githubToken
 }
 
 function generateCommentBody(scaFixReportMd) {
-  try {
-    return `## Veracode Fix for SCA - No Pull Request Created
+    return `## Veracode Fix for SCA Workflow Completed (Placeholder for actual comment content)
+
+No automated fixes were generated for the selected vulnerabilities.
 
 <details>
 <summary>Result</summary>
+
 ${scaFixReportMd}
+
 </details>
 
 `;
-  } catch (error) {
-    return 'A pull request has been created with automated fixes for Veracode SCA vulnerabilities. Please review the changes.';
-  }
+
 }
 
 module.exports = uploadNoPrComment;
