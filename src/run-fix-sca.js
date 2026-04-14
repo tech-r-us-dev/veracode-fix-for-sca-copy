@@ -4,7 +4,7 @@ const os = require('os');
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 
-async function runFixSca(workspaceDir, actionPath, fixScaParams) {
+async function runFixSca(workspaceDir, actionPath, fixScaParams, recursive) {
   try {
     const projectRootDir = '';
     const projectPath = path.join(workspaceDir, 'source-code', projectRootDir);
@@ -25,6 +25,10 @@ async function runFixSca(workspaceDir, actionPath, fixScaParams) {
     if (fixScaParams && fixScaParams.trim() && fixScaParams !== 'SCA-*') {
       core.info(`Fix SCA params: ${fixScaParams}`);
       args.push('-i', fixScaParams);
+    }
+
+    if (recursive === 'true') {
+      args.push('--recursive');
     }
 
     // Run veracode fix sca command

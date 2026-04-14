@@ -25,7 +25,9 @@ inputs:
   fix-sca-params:
     description: "Additional parameters for Fix SCA command"
     required: false
-
+  recursive:
+    description: "Run the Fix for SCA with the `--recursive` option"
+    required: false
 # outputs:
 #   run-next-step:
 #     description: "Whether to continue with PR creation"

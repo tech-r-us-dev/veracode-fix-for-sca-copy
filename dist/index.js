@@ -83107,7 +83107,7 @@ const os = __nccwpck_require__(22037);
 const core = __nccwpck_require__(42186);
 const exec = __nccwpck_require__(71514);
 
-async function runFixSca(workspaceDir, actionPath, fixScaParams) {
+async function runFixSca(workspaceDir, actionPath, fixScaParams, recursive) {
   try {
     const projectRootDir = '';
     const projectPath = path.join(workspaceDir, 'source-code', projectRootDir);
@@ -83128,6 +83128,10 @@ async function runFixSca(workspaceDir, actionPath, fixScaParams) {
     if (fixScaParams && fixScaParams.trim() && fixScaParams !== 'SCA-*') {
       core.info(`Fix SCA params: ${fixScaParams}`);
       args.push('-i', fixScaParams);
+    }
+
+    if (recursive === 'true') {
+      args.push('--recursive');
     }
 
     // Run veracode fix sca command
@@ -134361,6 +134365,7 @@ const setupAstGrep = __nccwpck_require__(21939);
 const runFixSca = __nccwpck_require__(64485);
 const createPr = __nccwpck_require__(83759);
 const uploadPrComment = __nccwpck_require__(56681);
+const recursive = core.getInput('recursive');
 
 async function main() {
   try {
@@ -134383,7 +134388,7 @@ async function main() {
 
     // Run Fix for SCA
     core.info('Running Fix for SCA...');
-    const fixScaOutput = await runFixSca(workspaceDir, actionPath, fixScaParams);
+    const fixScaOutput = await runFixSca(workspaceDir, actionPath, fixScaParams, recursive);
     
     if (!fixScaOutput.hasChanges) {
       core.info('No changes detected. Skipping PR creation.');

@@ -4,6 +4,7 @@ const setupAstGrep = require('./setup-ast-grep');
 const runFixSca = require('./run-fix-sca');
 const createPr = require('./create-pr');
 const uploadPrComment = require('./upload-pr-comment');
+const recursive = core.getInput('recursive');
 
 async function main() {
   try {
@@ -26,7 +27,7 @@ async function main() {
 
     // Run Fix for SCA
     core.info('Running Fix for SCA...');
-    const fixScaOutput = await runFixSca(workspaceDir, actionPath, fixScaParams);
+    const fixScaOutput = await runFixSca(workspaceDir, actionPath, fixScaParams, recursive);
     
     if (!fixScaOutput.hasChanges) {
       core.info('No changes detected. Skipping PR creation.');
