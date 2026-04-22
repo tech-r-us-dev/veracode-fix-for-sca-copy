@@ -120,6 +120,8 @@ async function createPr(workspaceDir, repository, sourceBranch, githubToken, git
 
     return { success: true, prResponse: prResponse.data };
   } catch (error) {
+    const statusFilePath = path.join(workspaceDir, 'source-code', 'sca-fix-status');
+    fs.writeFileSync(statusFilePath, 'PR_CREATION_FAILED', null, 2);
     throw new Error(`Failed to create pull request: ${error.message}`);
   }
 }
