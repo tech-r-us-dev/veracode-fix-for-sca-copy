@@ -134356,7 +134356,8 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const core = __nccwpck_require__(42186);
-
+const fs = __nccwpck_require__(57147);
+const path = __nccwpck_require__(71017);
 const setupAstGrep = __nccwpck_require__(21939);
 const runFixSca = __nccwpck_require__(64485);
 const createPr = __nccwpck_require__(83759);
@@ -134373,6 +134374,7 @@ async function main() {
     const fixScaParams = core.getInput('fix-sca-params');
 
     const workspaceDir = process.env.GITHUB_WORKSPACE;
+    const statusFilePath = path.join(workspaceDir, 'source-code', 'sca-fix-status');
     const actionPath = `${__dirname}/..`
 
     core.info('Starting Veracode Fix for SCA action...');
@@ -134386,6 +134388,7 @@ async function main() {
     const fixScaOutput = await runFixSca(workspaceDir, actionPath, fixScaParams);
     
     if (!fixScaOutput.hasChanges) {
+      fs.writeFileSync(statusFilePath, 'NO_CHANGES_DETECTED', null, 2);
       core.info('No changes detected. Skipping PR creation.');
       return;
     }
