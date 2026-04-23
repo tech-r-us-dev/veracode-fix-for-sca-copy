@@ -128232,21 +128232,24 @@ async function post() {
     if (fs.existsSync(statusFilePath)) {
         artifactFiles.push(statusFilePath);
     } else {
-    core.info(`${statusFilename} not found. Not included in artifact list.`);
+        core.info(`${statusFilename} not found. Not included in artifact list.`);
     }
 
-    const artifactFilePathDir = path.join(workspaceDir, 'source-code');
-    core.info('== Start upload ==')
-    const artifactClient = new DefaultArtifactClient();
-    const uploadResponse = await artifactClient.uploadArtifact(
-    'fix-for-sca-artifacts',
-    artifactFiles,
-    artifactFilePathDir,
-    { continueOnError: false }
-    );
-    core.info('== End upload ==')
-    core.info(`Artifact uploaded successfully: ${uploadResponse.artifactName}`);
-    
+    if (artifactFiles.length > 0) {
+        const artifactFilePathDir = path.join(workspaceDir, 'source-code');
+        core.info('== Start upload ==');
+        const artifactClient = new DefaultArtifactClient();
+        const uploadResponse = await artifactClient.uploadArtifact(
+            'fix-for-sca-artifacts',
+            artifactFiles,
+            artifactFilePathDir,
+            { continueOnError: false }
+        );
+        core.info('== End upload ==');
+        core.info(`Artifact uploaded successfully: ${uploadResponse.artifactName}`);
+    } else {
+        core.info('No file to upload.')
+    }
 }
 
 post();
